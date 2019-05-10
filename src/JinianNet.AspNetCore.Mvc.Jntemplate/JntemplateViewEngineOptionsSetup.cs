@@ -6,12 +6,12 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
     public class JntemplateViewEngineOptionsSetup : ConfigureOptions<JntemplateViewEngineOptions>
     {
         public JntemplateViewEngineOptionsSetup()
-            : base(options => ConfigureMarkdown(options))
+            : base(options => ConfigureViewEngine(options))
         {
 
         }
 
-        private static void ConfigureMarkdown(JntemplateViewEngineOptions options)
+        private static void ConfigureViewEngine(JntemplateViewEngineOptions options)
         {
             //if(Engine.ResourceDirectories != null && Engine.ResourceDirectories.Length>0)
             //{

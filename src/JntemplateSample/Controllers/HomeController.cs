@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using JntemplateSample.Models;
 
 namespace JntemplateSample.Controllers
 {
@@ -10,28 +12,23 @@ namespace JntemplateSample.Controllers
     {
         public IActionResult Index()
         {
-            ViewBag.Name = "jiniannet";
-            //"~/Template/Default/Index.jnt"
-            return View();
+            ViewBag.name = "jntemplate";
+            ViewBag.Site = new {
+                Name = "演示站点",
+                Url = "http://www.jiniannet.com"
+            };
+            return View("Views/home/default.html");
         }
 
-        public IActionResult About()
+        public IActionResult Privacy()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View();
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

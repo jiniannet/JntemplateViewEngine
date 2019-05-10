@@ -22,10 +22,6 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            //获取默认配置
-            var conf = EngineConfig.CreateDefault();
-            //初始化配置
-            Engine.Configure(conf);
             options.ViewEngines.Insert(0,_viewEngine);
         }
     }

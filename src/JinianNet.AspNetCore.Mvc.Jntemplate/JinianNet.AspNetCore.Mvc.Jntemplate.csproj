@@ -4,9 +4,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <SignAssembly>false</SignAssembly>
-    <Version>1.0.1-beta2</Version>
+    <Version>1.0.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +22,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.0" />
-    <PackageReference Include="JinianNet.JNTemplate" Version="1.4.0-beta1" />
+    <PackageReference Include="JinianNet.JNTemplate" Version="1.4.0.1" />
  </ItemGroup>
 
 </Project>

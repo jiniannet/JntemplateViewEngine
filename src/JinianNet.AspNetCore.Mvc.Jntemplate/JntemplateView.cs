@@ -84,7 +84,7 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
             }
             if (Page.Layout != null)
             {
-                //layout 支持像RZ一样，使用 $RenderBody() 来呈现模板
+                //layou 支持像RZ一样，使用 $RenderBody() 来呈现模板
                 context.ViewData["RenderBody"] = new JinianNet.JNTemplate.FuncHandler(m =>
                 {
                     return pageContent;

@@ -31,8 +31,11 @@ namespace JntemplateSample
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
-            }); 
-            services.AddMvc().AddJntemplateViewEngine().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+
+            services.AddJntemplateViewEngine();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +61,10 @@ namespace JntemplateSample
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseJntemplate(o=> {
+                o.StripWhiteSpace = false;
             });
         }
     }

@@ -12,7 +12,7 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
 {
     public class JntemplateViewEngine : IJntemplateViewEngine
     {
-        public static readonly string[] ViewExtension = { ".jnt", ".html" };
+        public static List<string> ViewExtension { get; } = new List<string>(new string[] { ".jnt", ".html" });
 
         private const string ControllerKey = "controller";
 

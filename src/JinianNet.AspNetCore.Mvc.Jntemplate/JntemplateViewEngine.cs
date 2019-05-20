@@ -179,7 +179,7 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
 
         private static bool IsRelativePath(string name)
         {
-            for (var i = 0; i < ViewExtension.Length; i++)
+            for (var i = 0; i < ViewExtension.Count; i++)
             {
                 if (name.EndsWith(ViewExtension[i], StringComparison.OrdinalIgnoreCase))
                 {

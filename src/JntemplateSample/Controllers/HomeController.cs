@@ -13,11 +13,12 @@ namespace JntemplateSample.Controllers
         public IActionResult Index()
         {
             ViewBag.name = "jntemplate";
-            ViewBag.Site = new {
-                Name = "演示站点",
-                Url = "http://www.jiniannet.com"
+            ViewBag.Site = new SiteViewModel
+            {
+                Name = "demo"
             };
-            return View("Views/home/default.html");
+            return View();
+            //return View("Views/home/default.html");
         }
 
         public IActionResult Privacy()

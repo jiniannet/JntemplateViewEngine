@@ -2,20 +2,21 @@
 using JinianNet.JNTemplate;
 using JinianNet.JNTemplate.Configuration;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using System;
 
 namespace JinianNet.AspNetCore.Mvc.Jntemplate
 {
     public static class MvcApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseJntemplate(this IApplicationBuilder app)
+        public static IApplicationBuilder UseJntemplate(this IApplicationBuilder app, IHostingEnvironment env)
         {
-            Engine.Configure(EngineConfig.CreateDefault());
-
+            //Engine.Configure(EngineConfig.CreateDefault());
+            Runtime.AppendResourcePath(env.ContentRootPath);
             return app;
         }
 
-        public static IApplicationBuilder UseJntemplate(this IApplicationBuilder app, Action<JntConfig> configureEngine)
+        public static IApplicationBuilder UseJntemplate(this IApplicationBuilder app, IHostingEnvironment env, Action<JntConfig> configureEngine)
         {
             var conf = new JntConfig();
             configureEngine?.Invoke(conf);
@@ -27,6 +28,7 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
             {
                 Engine.Configure(conf);
             }
+            Runtime.AppendResourcePath(env.ContentRootPath);
             return app;
         }
     }

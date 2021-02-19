@@ -1,138 +1,53 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using JinianNet.JNTemplate;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using System; 
-using System.IO;
-using System.Linq; 
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 
 namespace JinianNet.AspNetCore.Mvc.Jntemplate
 {
+    /// <summary>
+    /// Default implementation for <see cref="IView"/> 
+    /// </summary>
     public class JntemplateView : IView
     {
-        private readonly IJntemplateViewEngine _viewEngine;
-        private readonly IJntemplatePage _viewStartPage;
+        /// <summary>
+        /// Initializes a new instance of <see cref="JntemplateView"/>
+        /// </summary>
+        /// <param name="path">The view path.</param> 
 
-        public JntemplateView(
-            IJntemplateViewEngine viewEngine,
-            IJntemplatePage viewStartPage,
-            IJntemplatePage jntPage)
+        public JntemplateView(string path)
         {
-            _viewEngine = viewEngine ??
-                throw new ArgumentNullException(nameof(viewEngine));
-            _viewStartPage = viewStartPage;
-            Page = jntPage ??
-                throw new ArgumentNullException(nameof(jntPage));
+            this.Path = path;
         }
 
-        public string Path => Page.Path;
+        /// <inheritdoc />
+        public string Path { get; set; }
 
-        public IJntemplatePage Page { get; }
 
-        public async Task RenderAsync(ViewContext context)
+        /// <inheritdoc />
+        public Task RenderAsync(ViewContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
+            var viewPath = this.Path.TrimStart('/');
+            var data = context.ViewData;
+            var writer = context.Writer;
 
-            var bodyWriter = await RenderPageAsync(Page, context, invokeViewStart: true);
-            await RenderLayoutAsync(context, bodyWriter);
-        }
-
-        private async Task<TextWriter> RenderPageAsync(
-            IJntemplatePage page,
-            ViewContext context,
-            bool invokeViewStart)
-        {
-            if (invokeViewStart)
+            return Task.Run(() =>
             {
-                await RenderViewStartsAsync(context);
-            }
-
-            await RenderPageCoreAsync(page, context);
-
-            return page.ViewContext.Writer;
-        }
-
-        private Task RenderPageCoreAsync(IJntemplatePage page, ViewContext context)
-        {
-            page.ViewContext = context;
-            return page.ExecuteAsync();
-        }
-
-        private async Task RenderViewStartsAsync(ViewContext context)
-        {
-            if (_viewStartPage != null)
-            {
-                string layout = null;
-                await RenderPageCoreAsync(_viewStartPage, context);
-                layout = _viewEngine.GetAbsolutePath(_viewStartPage.Path, _viewStartPage.Layout);
-
-                if (layout != null)
+                var t = Engine.LoadTemplate(viewPath);
+                foreach (var kv in data)
                 {
-                    Page.Layout = layout;
+                    if (kv.Value != null)
+                    {
+                        t.Context.TempData.Set(kv.Key, kv.Value, kv.Value.GetType());
+                    }
                 }
-            }
-        }
-
-        private async Task RenderLayoutAsync(ViewContext context, TextWriter writer)
-        {
-            var pageContent = Page.BodyContent.ToString();
-            if (_viewStartPage != null)
-            {
-                Page.Layout = Page.Layout ?? _viewStartPage.Layout;
-            }
-            if (Page.Layout != null)
-            {
-                //layou 支持像RZ一样，使用 $RenderBody() 来呈现模板
-                context.ViewData["RenderBody"] = new JinianNet.JNTemplate.FuncHandler(m =>
-                {
-                    return pageContent;
-                });
-
-                context.ViewData["Title"] = Page.Title;
-
-                var layoutPage = GetLayoutPage(context, Page.Path, Page.Layout);
-                writer = await RenderPageAsync(layoutPage, context, invokeViewStart: true);
-
-                var layoutContent = layoutPage.BodyContent.ToString();
-
-                await writer.WriteAsync(layoutContent);
-            }
-            else
-            {
-                await writer.WriteAsync(pageContent);
-            }
-        }
-
-        private IJntemplatePage GetLayoutPage(ViewContext context, string executingFilePath, string layoutPath)
-        {
-            var layoutPageResult = _viewEngine.GetView(executingFilePath, layoutPath, isMainPage: true);
-            var originalLocations = layoutPageResult.SearchedLocations;
-            if (layoutPageResult.View == null)
-            {
-                layoutPageResult = _viewEngine.FindView(context, layoutPath, isMainPage: true);
-            }
-
-            if (layoutPageResult.View == null)
-            {
-                var locations = string.Empty;
-                if (originalLocations.Any())
-                {
-                    locations = Environment.NewLine + string.Join(Environment.NewLine, originalLocations);
-                }
-
-                if (layoutPageResult.SearchedLocations.Any())
-                {
-                    locations +=
-                        Environment.NewLine + string.Join(Environment.NewLine, layoutPageResult.SearchedLocations);
-                }
-
-                throw new InvalidOperationException($"The layout view '{layoutPath}' could not be located. The following locations were searched:{locations}");
-            }
-
-            var layoutPage = ((JntemplateView)layoutPageResult.View).Page;
-            return layoutPage;
-        }
+                t.Render(writer);
+            });
+        } 
     }
 }

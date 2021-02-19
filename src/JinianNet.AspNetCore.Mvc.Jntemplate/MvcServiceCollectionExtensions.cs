@@ -5,8 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JinianNet.AspNetCore.Mvc.Jntemplate
 {
+    /// <summary>
+    /// Extensions methods for configuring MVC via an <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class MvcServiceCollectionExtensions
     {
+
+        /// <summary>
+        /// Registers Jntemplate view engine services.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/>.</param> 
+        /// <returns>The <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection AddJntemplateViewEngine(this IServiceCollection services)
         {
             if (services == null)
@@ -22,6 +31,12 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
             return services;
         }
 
+        /// <summary>
+        /// Registers Jntemplate view engine services.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/>.</param>
+        /// <param name="setupAction">A setup action that configures the <see cref="JntemplateViewEngineOptions"/>.</param>
+        /// <returns>The <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection AddJntemplateViewEngine(
             this IServiceCollection services,
             Action<JntemplateViewEngineOptions> setupAction)

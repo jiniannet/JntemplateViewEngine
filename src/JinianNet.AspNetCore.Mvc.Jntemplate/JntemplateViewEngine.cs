@@ -10,15 +10,30 @@ using System.Linq;
 
 namespace JinianNet.AspNetCore.Mvc.Jntemplate
 {
+    /// <summary>
+    /// Default implementation of <see cref="IJntemplateViewEngine"/>.
+    /// </summary>
+    /// <remarks>
+    /// For <c>ViewResults</c> returned from controllers, views should be located in
+    /// <see cref="JntemplateViewEngineOptions.ViewLocationFormats"/>
+    /// by default. For the controllers in an area, views should exist in
+    /// <see cref="JntemplateViewEngineOptions.AreaViewLocationFormats"/>.
+    /// </remarks>
     public class JntemplateViewEngine : IJntemplateViewEngine
     {
         public static List<string> ViewExtension { get; } = new List<string>(new string[] { ".jnt", ".html" });
 
+        private const string AreaKey = "area";
         private const string ControllerKey = "controller";
+        private const string PageKey = "page";
 
         private readonly JntemplateViewEngineOptions _options;
         private readonly IFileProvider _contentRootFileProvider;
+        //private readonly string _contentRootPath;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JntemplateViewEngine" />.
+        /// </summary>
         public JntemplateViewEngine(
             IOptions<JntemplateViewEngineOptions> optionsAccessor,
             IHostingEnvironment env)
@@ -29,10 +44,11 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
             {
                 throw new ArgumentException(nameof(optionsAccessor));
             }
-
             _contentRootFileProvider = env.ContentRootFileProvider;
+            //_contentRootPath = env.ContentRootPath;
         }
 
+        /// <inheritdoc />
         public ViewEngineResult FindView(ActionContext context, string viewName, bool isMainPage)
         {
             if (context == null)
@@ -53,6 +69,7 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
             return LocatePageFromViewLocations(context, viewName, isMainPage);
         }
 
+        /// <inheritdoc />
         public ViewEngineResult GetView(string executingFilePath, string viewPath, bool isMainPage)
         {
             if (string.IsNullOrEmpty(viewPath))
@@ -68,6 +85,7 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
             return LocatePageFromPath(executingFilePath, viewPath, isMainPage);
         }
 
+        /// <inheritdoc />
         public string GetAbsolutePath(string executingFilePath, string pagePath)
         {
             if (string.IsNullOrEmpty(pagePath))
@@ -100,6 +118,15 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
             bool isMainPage)
         {
             var controllerName = GetNormalizedRouteValue(actionContext, ControllerKey);
+            var areaName = GetNormalizedRouteValue(actionContext, AreaKey);
+            string pageName = null;
+            if (actionContext.ActionDescriptor.RouteValues.ContainsKey(PageKey))
+            {
+                // Only calculate the Razor Page name if "page" is registered in RouteValues.
+                pageName = GetNormalizedRouteValue(actionContext, PageKey);
+            }
+
+
             var searchedLocations = new List<string>();
 
             foreach (var location in _options.ViewLocationFormats)
@@ -107,13 +134,8 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
                 var view = string.Format(location, viewName, controllerName);
                 var fileInfo = _contentRootFileProvider.GetFileInfo(view);
                 if (fileInfo.Exists)
-                {
-                    var page = new JntemplatePage(_contentRootFileProvider)
-                    {
-                        Path = view
-                    };
-                    var viewStartPage = GetViewStartPage();
-                    return ViewEngineResult.Found(viewName, new JntemplateView(this, viewStartPage, page));
+                {  
+                    return ViewEngineResult.Found(viewName, new JntemplateView(view));
                 }
 
                 searchedLocations.Add(view);
@@ -129,13 +151,8 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
             {
                 return ViewEngineResult.NotFound(applicationRelativePath, Enumerable.Empty<string>());
             }
-
-            var page = new JntemplatePage(_contentRootFileProvider)
-            {
-                Path = applicationRelativePath
-            };
-            var viewStartPage = GetViewStartPage();
-            return ViewEngineResult.Found(applicationRelativePath, new JntemplateView(this, viewStartPage, page));
+             
+            return ViewEngineResult.Found(applicationRelativePath, new JntemplateView(applicationRelativePath));
         }
 
         private static string GetNormalizedRouteValue(ActionContext context, string key)
@@ -187,26 +204,6 @@ namespace JinianNet.AspNetCore.Mvc.Jntemplate
                 }
             }
             return false;
-        }
-        private JntemplatePage GetViewStartPage()
-        {
-            const string viewStartPage = "_ViewStart";
-            JntemplatePage page = null;
-            foreach (var location in _options.ViewLocationFormats)
-            {
-                var view = string.Format(location, viewStartPage, string.Empty);
-                var fileInfo = _contentRootFileProvider.GetFileInfo(view);
-                if (fileInfo.Exists)
-                {
-                    page = new JntemplatePage(_contentRootFileProvider)
-                    {
-                        Path = view
-                    };
-                    break;
-                }
-            }
-
-            return page;
-        }
+        } 
     }
 }

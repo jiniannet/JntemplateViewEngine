@@ -1,7 +1,7 @@
 ﻿using JinianNet.JNTemplate;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
-using System; 
+using System;
 using System.Threading.Tasks;
 
 namespace JinianNet.AspNetCoreViewEngine.Jntemplate
@@ -43,11 +43,18 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
                 {
                     if (kv.Value != null)
                     {
-                        t.Context.TempData.Set(kv.Key, kv.Value, kv.Value.GetType());
+                        if (kv.Value is VariableElement var)
+                        {
+                            t.Context.TempData.SetElement(kv.Key, var);
+                        }
+                        else
+                        {
+                            t.Context.TempData.Set(kv.Key, kv.Value, kv.Value.GetType());
+                        }
                     }
                 }
                 t.Render(writer);
             });
-        } 
+        }
     }
 }

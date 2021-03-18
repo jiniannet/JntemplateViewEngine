@@ -20,12 +20,12 @@ namespace JntemplateViewEngineDemo.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Site = new SiteViewModel
+            this.Set("Site", new SiteViewModel
             {
                 Name = "Jntemplate",
                 Version = JinianNet.JNTemplate.Engine.Version
-            };
-            ViewBag.Now = DateTime.Now;
+            });
+            this.Set("Now", DateTime.Now);
             return View();
         }
     }

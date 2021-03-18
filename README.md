@@ -59,14 +59,15 @@ Jntemplate 文档：http://docs.jiniannet.com/
 ```
         public IActionResult Index()
         {
-            ViewBag.Site = new SiteViewModel
+            this.Set("Site", new SiteViewModel
             {
                 Name = "Jntemplate",
                 Version = JinianNet.JNTemplate.Engine.Version
-            };
-            ViewBag.Now = DateTime.Now;
+            });
+            this.Set("Now", DateTime.Now);
             return View();
         }
 ```
+具体可参考演示项目JntemplateViewEngineDemo
  
  

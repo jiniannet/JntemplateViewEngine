@@ -18,7 +18,7 @@
 		<Description>An Jntemplate view engine for  ASP.NET Core MVC.</Description>
 		<Copyright>© JinianNet.com. All rights reserved.</Copyright>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<PackageProjectUrl>http://www.jiniannet.com/</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/jiniannet/JntemplateViewEngine</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://gitee.com/jiniannet/JntemplateViewEngine.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -57,7 +57,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JinianNet.JNTemplate" Version="2.0.0" />
+		<PackageReference Include="JinianNet.JNTemplate" Version="2.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
 	</ItemGroup>
 

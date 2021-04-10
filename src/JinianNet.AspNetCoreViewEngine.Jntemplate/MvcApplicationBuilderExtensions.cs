@@ -21,6 +21,7 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
         public static IApplicationBuilder UseJntemplate(this IApplicationBuilder app, Action<JntemplateConfig> configureEngine = null)
         {
             var conf = new JntemplateConfig();
+            conf.Data = new VariableScope(null, TypeDetect.Standard);
             configureEngine?.Invoke(conf);
             if (conf.Data != null && conf.Data.Count > 0)
             {
@@ -34,7 +35,7 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
             {
                 conf.ContentRootPath = System.IO.Directory.GetCurrentDirectory();
             }
-            Runtime.AppendResourcePath(conf.ContentRootPath);
+            Engine.Current.AppendResourcePath(conf.ContentRootPath);
             return app;
         }
     }

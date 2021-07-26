@@ -45,7 +45,7 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
                     {
                         if (kv.Value is VariableElement var)
                         {
-                            t.Context.TempData.SetElement(kv.Key, var);
+                            t.Context.TempData.Set(kv.Key, var.Value,var.Type);
                         }
                         else
                         {

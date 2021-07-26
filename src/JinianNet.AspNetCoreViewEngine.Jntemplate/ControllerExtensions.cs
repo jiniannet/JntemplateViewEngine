@@ -1,5 +1,6 @@
 ﻿using JinianNet.JNTemplate;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System;
 
 namespace Microsoft.AspNetCore.Mvc
 {
@@ -21,7 +22,21 @@ namespace Microsoft.AspNetCore.Mvc
             {
                 controller.ViewData[key] = new VariableElement(typeof(T), value);
             }
-            
+        }
+
+        /// <summary>
+        /// Set a new value for variables.
+        /// </summary>
+        /// <param name="key">The key of the element to get</param> 
+        /// <param name="value">The element with the specified key.</param>
+        /// <param name="controller">see <see cref="Controller"/>.</param> 
+        /// <param name="valueType"></param>
+        public static void Set(this Controller controller, string key, object value, Type valueType)
+        {
+            if (controller != null)
+            {
+                controller.ViewData[key] = new VariableElement(valueType, value);
+            }
         }
     }
 }

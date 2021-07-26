@@ -9,11 +9,6 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate.Configuration
     public class JntemplateConfig : EngineConfig
     {
         /// <summary>
-        /// global data
-        /// </summary>
-        [Variable("Data", VariableType.System)]
-        public VariableScope Data { get; set; }
-        /// <summary>
         /// ContentRootPath
         /// </summary>
         [Variable("ContentRootPath", VariableType.Environment)]

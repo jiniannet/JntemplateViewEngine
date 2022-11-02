@@ -20,14 +20,15 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
         /// <returns></returns>
         public static IApplicationBuilder UseJntemplate(this IApplicationBuilder app, Action<JntemplateConfig> configureEngine = null)
         {
+            var engine = (IEngine)app.ApplicationServices.GetService(typeof(JNTemplate.IEngine));
             var conf = new JntemplateConfig();
             configureEngine?.Invoke(conf);
-            Engine.Configure(conf);
-            if (string.IsNullOrWhiteSpace(conf.ContentRootPath))
+            engine.Configure(conf);
+            if (!string.IsNullOrWhiteSpace(conf.ContentRootPath))
             {
-                conf.ContentRootPath = System.IO.Directory.GetCurrentDirectory();
+                engine.AppendResourcePath(conf.ContentRootPath);
+                //conf.ContentRootPath = System.IO.Directory.GetCurrentDirectory();
             }
-            Engine.Current.AppendResourcePath(conf.ContentRootPath);
             return app;
         }
     }

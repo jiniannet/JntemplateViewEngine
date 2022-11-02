@@ -24,6 +24,8 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
             {
                 throw new ArgumentNullException(nameof(services));
             }
+            services.AddSingleton(sp => JNTemplate.Engine.Current);
+
             services.AddOptions()
                 .AddTransient<IConfigureOptions<JntemplateViewEngineOptions>, JntemplateViewEngineOptionsSetup>();
 

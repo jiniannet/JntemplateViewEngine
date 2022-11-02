@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.1;net46;net5.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.1;net46;net5.0;net6.0</TargetFrameworks>
 		<SignAssembly>false</SignAssembly>
-		<Version>0.0.4</Version>
+		<Version>0.0.5</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<AssemblyVersion>0.0.4.0</AssemblyVersion>
@@ -39,6 +39,7 @@
     <DocumentationFile Condition="'$(TargetFramework)' == 'net47'">bin\Debug\net47\JinianNet.AspNetCoreViewEngine.Jntemplate.xml</DocumentationFile>
     <DocumentationFile Condition="'$(TargetFramework)' == 'net48'">bin\Debug\net48\JinianNet.AspNetCoreViewEngine.Jntemplate.xml</DocumentationFile>
     <DocumentationFile Condition="'$(TargetFramework)' == 'net5.0'">bin\Debug\net5.0\JinianNet.AspNetCoreViewEngine.Jntemplate.xml</DocumentationFile>
+    <DocumentationFile Condition="'$(TargetFramework)' == 'net6.0'">bin\Debug\net6.0\JinianNet.AspNetCoreViewEngine.Jntemplate.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
@@ -54,10 +55,11 @@
     <DocumentationFile Condition="'$(TargetFramework)' == 'net47'">bin\Release\net47\JinianNet.AspNetCoreViewEngine.Jntemplate.xml</DocumentationFile>
     <DocumentationFile Condition="'$(TargetFramework)' == 'net48'">bin\Release\net48\JinianNet.AspNetCoreViewEngine.Jntemplate.xml</DocumentationFile>
     <DocumentationFile Condition="'$(TargetFramework)' == 'net5.0'">bin\Release\net5.0\JinianNet.AspNetCoreViewEngine.Jntemplate.xml</DocumentationFile>
+    <DocumentationFile Condition="'$(TargetFramework)' == 'net6.0'">bin\Release\net6.0\JinianNet.AspNetCoreViewEngine.Jntemplate.xml</DocumentationFile>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JinianNet.JNTemplate" Version="2.2.2" />
+		<PackageReference Include="JinianNet.JNTemplate" Version="2.3.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
 	</ItemGroup>
 

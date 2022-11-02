@@ -32,12 +32,14 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
 
         private readonly JntemplateViewEngineOptions _options;
         private readonly IFileProvider _contentRootFileProvider;
+        private readonly JNTemplate.IEngine _engine;
         //private readonly string _contentRootPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JntemplateViewEngine" />.
         /// </summary>
         public JntemplateViewEngine(
+            JNTemplate.IEngine engine,
             IOptions<JntemplateViewEngineOptions> optionsAccessor,
             IHostingEnvironment env)
         {
@@ -48,6 +50,8 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
                 throw new ArgumentException(nameof(optionsAccessor));
             }
             _contentRootFileProvider = env.ContentRootFileProvider;
+            _engine = engine;
+            //env.ContentRootPath
             //_contentRootPath = env.ContentRootPath;
         }
 
@@ -137,8 +141,8 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
                 var view = string.Format(location, viewName, controllerName);
                 var fileInfo = _contentRootFileProvider.GetFileInfo(view);
                 if (fileInfo.Exists)
-                {  
-                    return ViewEngineResult.Found(viewName, new JntemplateView(view));
+                {
+                    return ViewEngineResult.Found(viewName, new JntemplateView(_engine, fileInfo.PhysicalPath));
                 }
 
                 searchedLocations.Add(view);
@@ -154,8 +158,10 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
             {
                 return ViewEngineResult.NotFound(applicationRelativePath, Enumerable.Empty<string>());
             }
-             
-            return ViewEngineResult.Found(applicationRelativePath, new JntemplateView(applicationRelativePath));
+            var fileInfo = _contentRootFileProvider.GetFileInfo(applicationRelativePath);
+            if (fileInfo.Exists)
+                applicationRelativePath = fileInfo.PhysicalPath;
+            return ViewEngineResult.Found(applicationRelativePath, new JntemplateView(_engine, applicationRelativePath));
         }
 
         private static string GetNormalizedRouteValue(ActionContext context, string key)
@@ -207,6 +213,6 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
                 }
             }
             return false;
-        } 
+        }
     }
 }

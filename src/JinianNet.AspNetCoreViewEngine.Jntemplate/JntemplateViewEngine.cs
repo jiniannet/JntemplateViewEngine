@@ -41,7 +41,12 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
         public JntemplateViewEngine(
             JNTemplate.IEngine engine,
             IOptions<JntemplateViewEngineOptions> optionsAccessor,
-            IHostingEnvironment env)
+#if FRAMEWORK || NETSTANDARD
+            IHostingEnvironment env
+#else
+            IWebHostEnvironment env
+#endif
+            )
         {
             _options = optionsAccessor.Value;
 

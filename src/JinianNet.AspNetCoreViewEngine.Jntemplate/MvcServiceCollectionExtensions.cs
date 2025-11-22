@@ -1,7 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using JinianNet.JNTemplate;
+using JinianNet.JNTemplate.CodeCompilation;
+using JinianNet.JNTemplate.Dynamic;
+using JinianNet.JNTemplate.Hosting;
+using JinianNet.JNTemplate.Parsers;
+using JinianNet.JNTemplate.Resources;
+using JinianNet.JNTemplate.Runtime;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
-using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 
 namespace JinianNet.AspNetCoreViewEngine.Jntemplate
 {
@@ -20,24 +30,41 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
             this IServiceCollection services,
             Action<JntemplateViewEngineOptions> setupAction = null)
         {
+#if FRAMEWORK || NETSTANDARD
             if (services == null)
-            {
                 throw new ArgumentNullException(nameof(services));
-            }
-            services.AddSingleton(sp => JNTemplate.Engine.Current);
+#else
+            ArgumentNullException.ThrowIfNull(services); 
+#endif
+            services.AddSingleton<IEngine>(Engine.Current);
+
+            //services.AddSingleton<IHostEnvironment,DefaultHostEnvironment>();
+            //services.AddSingleton<IOptions, RuntimeOptions>();
+            //services.AddSingleton<IOptions, RuntimeOptions>();
 
             services.AddOptions()
                 .AddTransient<IConfigureOptions<JntemplateViewEngineOptions>, JntemplateViewEngineOptionsSetup>();
 
             if (setupAction != null)
-            {
                 services.Configure(setupAction);
-            }
 
             services.AddTransient<IConfigureOptions<MvcViewOptions>, JntemplateMvcViewOptionsSetup>()
                 .AddSingleton<IJntemplateViewEngine, JntemplateViewEngine>();
 
             return services;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="setupAction"></param>
+        /// <returns></returns>
+        public static IMvcBuilder AddJntemplateViewEngine(
+            this IMvcBuilder builder,
+            Action<JntemplateViewEngineOptions> setupAction = null)
+        {
+            AddJntemplateViewEngine(builder.Services, setupAction);
+            return builder;
         }
     }
 }

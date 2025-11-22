@@ -52,10 +52,7 @@ namespace JntemplateViewEngineDemo
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
             //Use Jntemplate
-            app.UseJntemplate(jntemplateConfig =>
-            {
-                jntemplateConfig.ContentRootPath = env.ContentRootPath;
-            });
+            app.UseJntemplate();
         }
     }
 }

@@ -32,7 +32,7 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
         {
             if (context == null)
             {
-                throw new ArgumentNullException(nameof(context));
+                Task.FromException(new ArgumentNullException(nameof(context)));
             }
             var data = context.ViewData;
             var writer = context.Writer;
@@ -52,7 +52,7 @@ namespace JinianNet.AspNetCoreViewEngine.Jntemplate
                 }
             }
             t.Render(writer);
-            return Task.CompletedTask;
+            return Task.CompletedTask; 
         }
     }
 }
